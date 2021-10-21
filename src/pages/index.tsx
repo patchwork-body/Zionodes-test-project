@@ -1,7 +1,8 @@
-import type { NextPage } from 'next'
+import { StoreContext } from 'components/StoreContext'
 import Head from 'next/head'
+import { memo, useContext } from 'react'
 
-const Home: NextPage = () => {
+const Home = memo(function Home() {
   return (
     <div>
       <Head>
@@ -11,6 +12,6 @@ const Home: NextPage = () => {
       </Head>
     </div>
   )
-}
+})
 
 export default Home
