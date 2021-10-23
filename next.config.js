@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
+
   publicRuntimeConfig: {
-    DB_VERSION: process.env.DB_VERSION ?? 0,
-  }
-}
+    STORE_NAME: process.env.STORE_NAME ?? 'todos',
+    DB_VERSION: process.env.DB_VERSION ?? 1,
+  },
+};

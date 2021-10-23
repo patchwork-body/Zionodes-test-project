@@ -1,0 +1,7 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": ["zoinodes"]
+}

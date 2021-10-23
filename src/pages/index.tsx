@@ -1,6 +1,6 @@
-import { StoreContext } from 'components/StoreContext'
-import Head from 'next/head'
-import { memo, useContext } from 'react'
+import { AddTodoForm } from 'components/ui/add-todo-form';
+import Head from 'next/head';
+import { memo } from 'react';
 
 const Home = memo(function Home() {
   return (
@@ -10,8 +10,10 @@ const Home = memo(function Home() {
         <meta name="description" content="TODO LIST with nested items" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-    </div>
-  )
-})
 
-export default Home
+      <AddTodoForm />
+    </div>
+  );
+});
+
+export default Home;
