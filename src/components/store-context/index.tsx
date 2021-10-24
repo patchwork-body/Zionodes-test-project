@@ -7,15 +7,11 @@ const { publicRuntimeConfig } = getConfig();
 const DB_NAME_SESSION_STORAGE_KEY = 'databaseName';
 
 export type StoreContextValue = {
-  loading: boolean;
-  error: DOMException | null;
-  store: IDBDatabase | null;
+  store: IDBDatabase;
 };
 
 export const StoreContext = createContext<StoreContextValue>({
-  loading: true,
-  error: null,
-  store: null,
+  store: {} as IDBDatabase,
 });
 
 export type StoreContextProviderProps = {
@@ -24,14 +20,11 @@ export type StoreContextProviderProps = {
 };
 
 export const StoreContextProvider = memo(function StoreContextProvider({ init, children }: StoreContextProviderProps) {
-  const [loading, setLoading] = useState(false);
   const [store, setStore] = useState<IDBDatabase | null>(null);
   const [error, setError] = useState<DOMException | null>(null);
 
   const initStore = useCallback(
     async (databaseName: string | null) => {
-      setLoading(true);
-
       try {
         setStore(await createStore({ name: databaseName ?? nanoid(), version: publicRuntimeConfig.DB_VERSION, init }));
       } catch (error) {
@@ -41,8 +34,6 @@ export const StoreContextProvider = memo(function StoreContextProvider({ init, c
           throw error;
         }
       }
-
-      setLoading(false);
     },
     [init],
   );
@@ -51,5 +42,14 @@ export const StoreContextProvider = memo(function StoreContextProvider({ init, c
     initStore(sessionStorage.getItem(DB_NAME_SESSION_STORAGE_KEY));
   }, [initStore]);
 
-  return <StoreContext.Provider value={{ loading, error, store }}>{children}</StoreContext.Provider>;
+  if (!store) {
+    return null;
+  }
+
+  if (error) {
+    console.error(error);
+    return <p>{error.message}</p>;
+  }
+
+  return <StoreContext.Provider value={{ store }}>{children}</StoreContext.Provider>;
 });

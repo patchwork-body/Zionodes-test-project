@@ -1,17 +1,14 @@
-import { StoreContext } from 'components/store-context';
-import { memo, useCallback, useContext } from 'react';
+import { memo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import getConfig from 'next/config';
 import { nanoid } from 'nanoid';
-
-const { publicRuntimeConfig } = getConfig();
+import { useRWTransaction } from 'hooks/use-rw-transaction';
 
 type FormValues = {
   desc: string;
 };
 
 export const AddTodoForm = memo(function AddTodoForm() {
-  const { store, loading } = useContext(StoreContext);
+  const { add } = useRWTransaction();
 
   const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -22,20 +19,18 @@ export const AddTodoForm = memo(function AddTodoForm() {
   });
 
   const submit = useCallback(
-    async (values: FormValues) => {
-      if (!loading && store) {
-        const objectStore = store
-          .transaction(publicRuntimeConfig.STORE_NAME, 'readwrite')
-          .objectStore(publicRuntimeConfig.STORE_NAME);
+    async ({ desc }: FormValues) => {
+      try {
+        await add({ id: nanoid(), desc });
+      } catch (error) {
+        if (error instanceof DOMException) {
+          console.error(error);
+        }
 
-        const request = objectStore.add({ id: nanoid(), desc: values.desc });
-
-        request.onsuccess = () => {
-          console.log(request.result);
-        };
+        throw error;
       }
     },
-    [loading, store],
+    [add],
   );
 
   return (
