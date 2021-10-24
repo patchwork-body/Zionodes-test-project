@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { nanoid } from 'nanoid';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
+import { createTodo } from 'helpers/create-todo';
 
 type FormValues = {
   desc: string;
@@ -21,7 +21,7 @@ export const AddTodoForm = memo(function AddTodoForm() {
   const submit = useCallback(
     async ({ desc }: FormValues) => {
       try {
-        await add({ id: nanoid(), desc });
+        await add(createTodo(desc));
       } catch (error) {
         if (error instanceof DOMException) {
           console.error(error);

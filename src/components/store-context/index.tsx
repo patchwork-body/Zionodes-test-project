@@ -24,9 +24,9 @@ export const StoreContextProvider = memo(function StoreContextProvider({ init, c
   const [error, setError] = useState<DOMException | null>(null);
 
   const initStore = useCallback(
-    async (databaseName: string | null) => {
+    async (databaseName: string) => {
       try {
-        setStore(await createStore({ name: databaseName ?? nanoid(), version: publicRuntimeConfig.DB_VERSION, init }));
+        setStore(await createStore({ name: databaseName, version: publicRuntimeConfig.DB_VERSION, init }));
       } catch (error) {
         if (error instanceof DOMException) {
           setError(error);
@@ -39,7 +39,14 @@ export const StoreContextProvider = memo(function StoreContextProvider({ init, c
   );
 
   useEffect(() => {
-    initStore(sessionStorage.getItem(DB_NAME_SESSION_STORAGE_KEY));
+    let databaseName = sessionStorage.getItem(DB_NAME_SESSION_STORAGE_KEY);
+
+    if (!databaseName) {
+      databaseName = nanoid();
+      sessionStorage.setItem(DB_NAME_SESSION_STORAGE_KEY, databaseName);
+    }
+
+    initStore(databaseName);
   }, [initStore]);
 
   if (!store) {

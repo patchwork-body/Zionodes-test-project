@@ -1,12 +1,13 @@
 import { memo, useEffect, useState } from 'react';
 import { useROTransaction } from 'hooks/use-ro-transaction';
+import type { Todo } from 'helpers/create-todo';
 
 export const TodoList = memo(function TodoList() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<Todo[]>([]);
   const { getAll } = useROTransaction();
 
   useEffect(() => {
-    getAll().then((nextItems: any[]) => setData(nextItems));
+    getAll().then((nextItems: Todo[]) => setData(nextItems));
   });
 
   return (
