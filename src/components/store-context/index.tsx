@@ -1,62 +1,53 @@
-import { createContext, memo, ReactNode, useCallback, useEffect, useState } from 'react';
-import { createStore, CreateStoreParams } from 'store';
-import getConfig from 'next/config';
-import { nanoid } from 'nanoid';
+import { Todo } from 'helpers/create-todo';
+import { createContext, Dispatch, memo, ReactNode, useReducer } from 'react';
 
-const { publicRuntimeConfig } = getConfig();
-const DB_NAME_SESSION_STORAGE_KEY = 'databaseName';
-
-export type StoreContextValue = {
-  store: IDBDatabase;
+export type ReducerState = {
+  workspaceName: string;
+  todos: Todo[];
 };
 
-export const StoreContext = createContext<StoreContextValue>({
-  store: {} as IDBDatabase,
-});
+export type StoreContextValue = {
+  state: ReducerState;
+  dispatch: Dispatch<{ type: ReducerActions; payload: any }>;
+};
 
 export type StoreContextProviderProps = {
-  init: CreateStoreParams['init'];
   children: ReactNode;
 };
 
-export const StoreContextProvider = memo(function StoreContextProvider({ init, children }: StoreContextProviderProps) {
-  const [store, setStore] = useState<IDBDatabase | null>(null);
-  const [error, setError] = useState<DOMException | null>(null);
+export enum ReducerActions {
+  ADD_TODO = '@ADD_TODO',
+  INIT_TODOS = '@INIT_TODOS',
+}
 
-  const initStore = useCallback(
-    async (databaseName: string) => {
-      try {
-        setStore(await createStore({ name: databaseName, version: publicRuntimeConfig.DB_VERSION, init }));
-      } catch (error) {
-        if (error instanceof DOMException) {
-          setError(error);
-        } else {
-          throw error;
-        }
+export const reducerInitState: ReducerState = {
+  workspaceName: '',
+  todos: [],
+};
+
+export const StoreContext = createContext<StoreContextValue>({
+  state: reducerInitState,
+  dispatch: () => null,
+});
+
+export const StoreContextProvider = memo(function StoreContextProvider({ children }: StoreContextProviderProps) {
+  const [state, dispatch] = useReducer(
+    (state: ReducerState, action: { type: ReducerActions; payload: any }) => {
+      switch (action.type) {
+        case ReducerActions.ADD_TODO:
+          return { ...state, todos: [...state.todos, action.payload] };
+        case ReducerActions.INIT_TODOS:
+          return { ...state, todos: action.payload };
+        default:
+          return state;
       }
     },
-    [init],
+
+    {
+      workspaceName: '',
+      todos: [],
+    },
   );
 
-  useEffect(() => {
-    let databaseName = sessionStorage.getItem(DB_NAME_SESSION_STORAGE_KEY);
-
-    if (!databaseName) {
-      databaseName = nanoid();
-      sessionStorage.setItem(DB_NAME_SESSION_STORAGE_KEY, databaseName);
-    }
-
-    initStore(databaseName);
-  }, [initStore]);
-
-  if (!store) {
-    return null;
-  }
-
-  if (error) {
-    console.error(error);
-    return <p>{error.message}</p>;
-  }
-
-  return <StoreContext.Provider value={{ store }}>{children}</StoreContext.Provider>;
+  return <StoreContext.Provider value={{ state, dispatch }}> {children} </StoreContext.Provider>;
 });

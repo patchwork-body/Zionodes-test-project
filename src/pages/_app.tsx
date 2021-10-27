@@ -1,7 +1,8 @@
 import type { AppProps } from 'next/app';
 import { useCallback } from 'react';
-import { StoreContextProvider } from 'components/store-context';
+import { IndexedDBContextProvider } from 'components/indexed-db-context';
 import getConfig from 'next/config';
+import { StoreContextProvider } from 'components/store-context';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -11,9 +12,11 @@ function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <StoreContextProvider init={init}>
-      <Component {...pageProps} />
-    </StoreContextProvider>
+    <IndexedDBContextProvider init={init}>
+      <StoreContextProvider>
+        <Component {...pageProps} />
+      </StoreContextProvider>
+    </IndexedDBContextProvider>
   );
 }
 

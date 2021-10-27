@@ -1,9 +1,9 @@
-import { StoreContext } from 'components/store-context';
+import { IndexedDBContext } from 'components/indexed-db-context';
 import { useCallback, useContext } from 'react';
 import { createTransaction } from 'store/create-transaction';
 
 export function useROTransaction(): { getAll: () => Promise<any[]> } {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(IndexedDBContext);
 
   const getAll = useCallback((): Promise<any[]> => {
     const transaction = createTransaction({ store, type: 'readonly' });
