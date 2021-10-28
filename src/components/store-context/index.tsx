@@ -1,56 +1,76 @@
 import { Todo } from 'helpers/create-todo';
 import { createContext, Dispatch, memo, ReactNode, useReducer } from 'react';
 
-export type ReducerState = {
-  workspaceName: string;
+export type TodoStoreState = {
+  draggableTodo: Todo | null;
   todos: Todo[];
 };
 
-export type StoreContextValue = {
-  state: ReducerState;
-  dispatch: Dispatch<{ type: ReducerActions; payload: any }>;
-};
-
-export type StoreContextProviderProps = {
-  children: ReactNode;
-};
-
-export enum ReducerActions {
-  ADD_TODO = '@ADD_TODO',
+export enum TodoStoreActions {
   INIT_TODOS = '@INIT_TODOS',
+  SET_DRAGGABLE_TODO = '@SET_DRAGGABLE_TODO',
+  ADD_TODO = '@ADD_TODO',
+  UPDATE_TODO = '@UPDATE_TODO',
   REMOVE_TODO = '@REMOVE_TODO',
 }
 
-export const reducerInitState: ReducerState = {
-  workspaceName: '',
-  todos: [],
+export type TodoStoreContextValue = {
+  state: TodoStoreState;
+  dispatch: Dispatch<{ type: TodoStoreActions; payload: any }>;
 };
 
-export const StoreContext = createContext<StoreContextValue>({
+export type TodoStoreContextProviderProps = {
+  children: ReactNode;
+};
+
+export const reducerInitState: TodoStoreState = {
+  todos: [],
+  draggableTodo: null,
+};
+
+export const TodoStoreContext = createContext<TodoStoreContextValue>({
   state: reducerInitState,
   dispatch: () => null,
 });
 
-export const StoreContextProvider = memo(function StoreContextProvider({ children }: StoreContextProviderProps) {
+const sortByOrder = (left: Todo, right: Todo) => (left.order > right.order ? 1 : -1);
+
+export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
+  children,
+}: TodoStoreContextProviderProps) {
   const [state, dispatch] = useReducer(
-    (state: ReducerState, action: { type: ReducerActions; payload: any }) => {
+    (state: TodoStoreState, action: { type: TodoStoreActions; payload: any }) => {
       switch (action.type) {
-        case ReducerActions.ADD_TODO:
+        case TodoStoreActions.INIT_TODOS:
+          return { ...state, todos: action.payload.sort(sortByOrder) };
+
+        case TodoStoreActions.SET_DRAGGABLE_TODO:
+          return { ...state, draggableTodo: action.payload };
+
+        case TodoStoreActions.ADD_TODO:
           return { ...state, todos: [...state.todos, action.payload] };
-        case ReducerActions.REMOVE_TODO:
+
+        case TodoStoreActions.UPDATE_TODO:
+          return {
+            ...state,
+            todos: state.todos
+              .map(todo => (todo.id === action.payload.id ? { ...todo, ...action.payload } : todo))
+              .sort(sortByOrder),
+          };
+
+        case TodoStoreActions.REMOVE_TODO:
           return { ...state, todos: state.todos.filter(({ id }) => id !== action.payload) };
-        case ReducerActions.INIT_TODOS:
-          return { ...state, todos: action.payload };
+
         default:
           return state;
       }
     },
 
     {
-      workspaceName: '',
+      draggableTodo: null,
       todos: [],
     },
   );
 
-  return <StoreContext.Provider value={{ state, dispatch }}> {children} </StoreContext.Provider>;
+  return <TodoStoreContext.Provider value={{ state, dispatch }}> {children} </TodoStoreContext.Provider>;
 });

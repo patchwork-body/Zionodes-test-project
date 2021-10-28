@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app';
 import { useCallback } from 'react';
 import { IndexedDBContextProvider } from 'components/indexed-db-context';
 import getConfig from 'next/config';
-import { StoreContextProvider } from 'components/store-context';
+import { TodoStoreContextProvider } from 'components/store-context';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -13,9 +13,9 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <IndexedDBContextProvider init={init}>
-      <StoreContextProvider>
+      <TodoStoreContextProvider>
         <Component {...pageProps} />
-      </StoreContextProvider>
+      </TodoStoreContextProvider>
     </IndexedDBContextProvider>
   );
 }

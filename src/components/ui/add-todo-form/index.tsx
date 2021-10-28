@@ -2,14 +2,14 @@ import { memo, useCallback, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
 import { createTodo, Todo } from 'helpers/create-todo';
-import { ReducerActions, StoreContext } from 'components/store-context';
+import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
 
 type FormValues = {
   desc: string;
 };
 
 export const AddTodoForm = memo(function AddTodoForm() {
-  const { dispatch } = useContext(StoreContext);
+  const { state, dispatch } = useContext(TodoStoreContext);
   const { add } = useRWTransaction<Partial<Todo>>();
 
   const { register, handleSubmit, reset, formState } = useForm<FormValues>({
@@ -24,9 +24,9 @@ export const AddTodoForm = memo(function AddTodoForm() {
   const submit = useCallback(
     async ({ desc }: FormValues) => {
       try {
-        const todo = createTodo(desc);
+        const todo = createTodo({ desc, order: (state.todos[state.todos.length - 1]?.order ?? 0) + 1 });
         const id = await add(todo);
-        dispatch({ type: ReducerActions.ADD_TODO, payload: { ...todo, id } });
+        dispatch({ type: TodoStoreActions.ADD_TODO, payload: { ...todo, id } });
         reset();
       } catch (error) {
         if (error instanceof DOMException) {
@@ -37,7 +37,7 @@ export const AddTodoForm = memo(function AddTodoForm() {
         throw error;
       }
     },
-    [add, dispatch, reset],
+    [add, dispatch, reset, state.todos],
   );
 
   return (
