@@ -1,7 +1,7 @@
 import { memo, useCallback, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
-import { createTodo } from 'helpers/create-todo';
+import { createTodo, Todo } from 'helpers/create-todo';
 import { ReducerActions, StoreContext } from 'components/store-context';
 
 type FormValues = {
@@ -10,7 +10,7 @@ type FormValues = {
 
 export const AddTodoForm = memo(function AddTodoForm() {
   const { dispatch } = useContext(StoreContext);
-  const { add } = useRWTransaction();
+  const { add } = useRWTransaction<Partial<Todo>>();
 
   const { register, handleSubmit, reset, formState } = useForm<FormValues>({
     defaultValues: {
@@ -39,8 +39,6 @@ export const AddTodoForm = memo(function AddTodoForm() {
     },
     [add, dispatch, reset],
   );
-
-  console.log(formState.errors);
 
   return (
     <form onSubmit={handleSubmit(submit)}>

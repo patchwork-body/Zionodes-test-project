@@ -1,2 +1,2 @@
-export { createStore } from './create-store';
-export type { CreateStoreParams } from './create-store';
+export { openIndexedDB } from './open-indexed-db';
+export type { OpenIndexedDBParams } from './open-indexed-db';

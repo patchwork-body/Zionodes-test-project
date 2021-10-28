@@ -1,23 +1,15 @@
 import { IndexedDBContext } from 'components/indexed-db-context';
+import { promisify } from 'helpers/promisify';
 import { useCallback, useContext } from 'react';
 import { createTransaction } from 'store/create-transaction';
 
-export function useROTransaction(): { getAll: () => Promise<any[]> } {
+export function useROTransaction<T>(): { getAll: () => Promise<T[]> } {
   const { store } = useContext(IndexedDBContext);
 
-  const getAll = useCallback((): Promise<any[]> => {
+  const getAll = useCallback((): Promise<T[]> => {
     const transaction = createTransaction({ store, type: 'readonly' });
     const request = transaction.getAll();
-
-    return new Promise((resolve, reject) => {
-      request.onsuccess = () => {
-        resolve(request.result);
-      };
-
-      request.onerror = () => {
-        reject(request.error);
-      };
-    });
+    return promisify(request);
   }, [store]);
 
   return { getAll };

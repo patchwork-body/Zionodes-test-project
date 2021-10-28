@@ -8,7 +8,7 @@ const { publicRuntimeConfig } = getConfig();
 
 function App({ Component, pageProps }: AppProps) {
   const init = useCallback((dbInstance: IDBDatabase) => {
-    dbInstance.createObjectStore(publicRuntimeConfig.STORE_NAME, { keyPath: 'id' });
+    dbInstance.createObjectStore(publicRuntimeConfig.STORE_NAME, { keyPath: 'id', autoIncrement: true });
   }, []);
 
   return (
