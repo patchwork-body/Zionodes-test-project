@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { Todo } from 'helpers/create-todo';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
 import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { TodoForm } from 'components/todo-form';
+import { TodoList } from 'components/todo-list';
 
 export type TodoItemProps = {
   todo: Todo;
@@ -52,8 +54,8 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
   const deleteTodo = useCallback(() => {
     remove(todo.id);
-    dispatch({ type: TodoStoreActions.REMOVE_TODO, payload: todo.id });
-  }, [dispatch, remove, todo.id]);
+    dispatch({ type: TodoStoreActions.REMOVE_TODO, payload: { parent: todo.parent, self: todo.id } });
+  }, [dispatch, remove, todo.id, todo.parent]);
 
   const toggleCheckbox = useCallback(() => {
     put({ ...todo, completed: !getValues('completed') });
@@ -137,7 +139,12 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
         alt="cross"
       />
 
-      {isSubTodosShown && <div>awesome</div>}
+      {isSubTodosShown && (
+        <div>
+          <TodoForm parent={todo.id} />
+          <TodoList parent={todo.id} />
+        </div>
+      )}
     </div>
   );
 });

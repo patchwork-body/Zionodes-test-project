@@ -1,15 +1,23 @@
+import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { createTodo, Todo } from 'helpers/create-todo';
+import { useRWTransaction } from 'hooks/use-rw-transaction';
 import { memo, useCallback, useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRWTransaction } from 'hooks/use-rw-transaction';
-import { createTodo, Todo } from 'helpers/create-todo';
-import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
 
 type FormValues = {
   desc: string;
 };
 
-export const AddTodoForm = memo(function AddTodoForm() {
-  const { state, dispatch } = useContext(TodoStoreContext);
+export type TodoFormProps = {
+  parent: string;
+};
+
+export const TodoForm = memo(function TodoForm({ parent }: TodoFormProps) {
+  const {
+    state: { todos },
+    dispatch,
+  } = useContext(TodoStoreContext);
+
   const { add } = useRWTransaction<Partial<Todo>>();
 
   const { register, handleSubmit, reset, formState } = useForm<FormValues>({
@@ -23,21 +31,17 @@ export const AddTodoForm = memo(function AddTodoForm() {
 
   const submit = useCallback(
     async ({ desc }: FormValues) => {
-      try {
-        const todo = createTodo({ desc, order: (state.todos[state.todos.length - 1]?.order ?? 0) + 1 });
-        const id = await add(todo);
-        dispatch({ type: TodoStoreActions.ADD_TODO, payload: { ...todo, id } });
-        reset();
-      } catch (error) {
-        if (error instanceof DOMException) {
-          console.error(error);
-          return;
-        }
+      const targetTodos = todos[parent];
+      const nextOrder = (targetTodos[targetTodos.length - 1]?.order ?? 0) + 1;
+      const todo = createTodo({ desc, order: nextOrder, parent });
 
-        throw error;
-      }
+      await add(todo);
+      dispatch({ type: TodoStoreActions.ADD_TODO, payload: { parent, todo } });
+
+      reset();
     },
-    [add, dispatch, reset, state.todos],
+
+    [add, dispatch, parent, reset, todos],
   );
 
   return (

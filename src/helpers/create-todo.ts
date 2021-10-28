@@ -23,5 +23,5 @@ export const createTodo = ({ desc, order, parent }: CreateTodoParams): Partial<T
   updatedAt: new Date().toUTCString(),
   desc,
   completed: false,
-  parent,
+  parent: parent ?? 'root',
 });

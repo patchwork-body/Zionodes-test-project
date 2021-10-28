@@ -1,7 +1,7 @@
-import { memo } from 'react';
+import React, { memo } from 'react';
 import Head from 'next/head';
-import { RootTodoList } from 'components/root-todo-list';
-import { AddTodoForm } from 'components/ui/add-todo-form';
+import { TodoForm } from 'components/todo-form';
+import { TodoList } from 'components/todo-list';
 
 const Home = memo(function Home() {
   return (
@@ -12,8 +12,8 @@ const Home = memo(function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AddTodoForm />
-      <RootTodoList />
+      <TodoForm parent="root" />
+      <TodoList parent="root" />
     </div>
   );
 });

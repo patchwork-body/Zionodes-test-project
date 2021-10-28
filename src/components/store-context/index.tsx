@@ -3,7 +3,10 @@ import { createContext, Dispatch, memo, ReactNode, useReducer } from 'react';
 
 export type TodoStoreState = {
   draggableTodo: Todo | null;
-  todos: Todo[];
+  todos: {
+    root: Todo[];
+    [key: string]: Todo[];
+  };
 };
 
 export enum TodoStoreActions {
@@ -24,7 +27,10 @@ export type TodoStoreContextProviderProps = {
 };
 
 export const reducerInitState: TodoStoreState = {
-  todos: [],
+  todos: {
+    root: [],
+  },
+
   draggableTodo: null,
 };
 
@@ -42,24 +48,44 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
     (state: TodoStoreState, action: { type: TodoStoreActions; payload: any }) => {
       switch (action.type) {
         case TodoStoreActions.INIT_TODOS:
-          return { ...state, todos: action.payload.sort(sortByOrder) };
+          return {
+            ...state,
+            todos: { ...state.todos, [action.payload.parent]: action.payload.todos.sort(sortByOrder) },
+          };
 
         case TodoStoreActions.SET_DRAGGABLE_TODO:
           return { ...state, draggableTodo: action.payload };
 
         case TodoStoreActions.ADD_TODO:
-          return { ...state, todos: [...state.todos, action.payload] };
+          return {
+            ...state,
+            todos: {
+              ...state.todos,
+              [action.payload.parent]: [...state.todos[action.payload.parent], action.payload.todo],
+            },
+          };
 
         case TodoStoreActions.UPDATE_TODO:
           return {
             ...state,
-            todos: state.todos
-              .map(todo => (todo.id === action.payload.id ? { ...todo, ...action.payload } : todo))
-              .sort(sortByOrder),
+            todos: {
+              ...state.todos,
+              [action.payload.parent]: state.todos[action.payload.parent]
+                .map(todo => (todo.id === action.payload.id ? { ...todo, ...action.payload } : todo))
+                .sort(sortByOrder),
+            },
           };
 
         case TodoStoreActions.REMOVE_TODO:
-          return { ...state, todos: state.todos.filter(({ id }) => id !== action.payload) };
+          return {
+            ...state,
+            todos: {
+              ...state.todos,
+              [action.payload.parent]: state.todos[action.payload.parent].filter(
+                ({ id }) => id !== action.payload.self,
+              ),
+            },
+          };
 
         default:
           return state;
@@ -68,7 +94,9 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
 
     {
       draggableTodo: null,
-      todos: [],
+      todos: {
+        root: [],
+      },
     },
   );
 
