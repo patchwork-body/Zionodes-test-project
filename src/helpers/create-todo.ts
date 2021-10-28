@@ -1,25 +1,27 @@
 import { nanoid } from 'nanoid';
 
 export type Todo = {
-  id: number;
-  key: string;
+  id: string;
   order: number;
   createdAt: string;
   updatedAt: string;
   desc: string;
   completed: boolean;
+  parent?: string;
 };
 
 type CreateTodoParams = {
   desc: string;
   order: number;
+  parent?: string;
 };
 
-export const createTodo = ({ desc, order }: CreateTodoParams): Partial<Todo> => ({
-  key: nanoid(),
+export const createTodo = ({ desc, order, parent }: CreateTodoParams): Partial<Todo> => ({
+  id: nanoid(),
   order,
   createdAt: new Date().toUTCString(),
   updatedAt: new Date().toUTCString(),
   desc,
   completed: false,
+  parent,
 });

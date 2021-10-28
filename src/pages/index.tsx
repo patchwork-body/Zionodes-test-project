@@ -1,7 +1,7 @@
-import { AddTodoForm } from 'components/ui/add-todo-form';
-import { TodoList } from 'components/ui/todo-list';
-import Head from 'next/head';
 import { memo } from 'react';
+import Head from 'next/head';
+import { RootTodoList } from 'components/root-todo-list';
+import { AddTodoForm } from 'components/ui/add-todo-form';
 
 const Home = memo(function Home() {
   return (
@@ -13,7 +13,7 @@ const Home = memo(function Home() {
       </Head>
 
       <AddTodoForm />
-      <TodoList />
+      <RootTodoList />
     </div>
   );
 });

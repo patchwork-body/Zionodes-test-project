@@ -41,7 +41,7 @@ export const AddTodoForm = memo(function AddTodoForm() {
   );
 
   return (
-    <form onSubmit={handleSubmit(submit)}>
+    <form autoComplete="off" onSubmit={handleSubmit(submit)}>
       <input type="text" {...register('desc', { required: true, maxLength: 20, minLength: 5 })} />
       {formState.errors.desc && (
         <p>

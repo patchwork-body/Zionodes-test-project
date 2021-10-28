@@ -18,6 +18,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   const { put, remove } = useRWTransaction<Todo>();
   const [readOnly, setReadOnly] = useState(true);
   const [draggable, setDraggable] = useState(false);
+  const [isSubTodosShown, setIsSubTodosShown] = useState(false);
 
   const {
     state: { draggableTodo },
@@ -95,6 +96,10 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
     [dispatch, draggableTodo, put, todo],
   );
 
+  const toggleSubTodos = useCallback(() => {
+    setIsSubTodosShown(previous => !previous);
+  }, []);
+
   return (
     <div
       draggable={draggable}
@@ -105,6 +110,8 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
       onDragLeave={dragLeave}
       onDrop={drop}
     >
+      <button onClick={toggleSubTodos}>&gt;</button>
+
       <input type="checkbox" {...register('completed', { onChange: toggleCheckbox })} />
 
       <input
@@ -129,6 +136,8 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
         src="/drag.svg"
         alt="cross"
       />
+
+      {isSubTodosShown && <div>awesome</div>}
     </div>
   );
 });
