@@ -17,7 +17,7 @@ export const TodoList = memo(function TodoList() {
   return (
     <ul>
       {state.todos.map(todo => (
-        <li key={todo.id}>
+        <li key={todo.key}>
           <TodoItem todo={todo} />
         </li>
       ))}

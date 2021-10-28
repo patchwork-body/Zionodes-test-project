@@ -1,11 +1,12 @@
 import { IndexedDBContext } from 'components/indexed-db-context';
 import { promisify } from 'helpers/promisify';
 import { useCallback, useContext } from 'react';
-import { createTransaction } from 'store/create-transaction';
+import { createTransaction } from 'indexed-db/create-transaction';
 
 export function useRWTransaction<T extends Record<string, any>>(): {
   add: (value: T) => Promise<IDBValidKey>;
   put: (value: T) => Promise<IDBValidKey>;
+  remove: (id: any) => Promise<undefined>;
 } {
   const { store } = useContext(IndexedDBContext);
 
@@ -27,5 +28,14 @@ export function useRWTransaction<T extends Record<string, any>>(): {
     [store],
   );
 
-  return { add, put };
+  const remove = useCallback(
+    (id: any): Promise<undefined> => {
+      const transaction = createTransaction({ store, type: 'readwrite' });
+      const request = transaction.delete(id);
+      return promisify(request);
+    },
+    [store],
+  );
+
+  return { add, put, remove };
 }

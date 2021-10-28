@@ -25,8 +25,8 @@ export const AddTodoForm = memo(function AddTodoForm() {
     async ({ desc }: FormValues) => {
       try {
         const todo = createTodo(desc);
-        await add(todo);
-        dispatch({ type: ReducerActions.ADD_TODO, payload: todo });
+        const id = await add(todo);
+        dispatch({ type: ReducerActions.ADD_TODO, payload: { ...todo, id } });
         reset();
       } catch (error) {
         if (error instanceof DOMException) {

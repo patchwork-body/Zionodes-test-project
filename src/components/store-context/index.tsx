@@ -18,6 +18,7 @@ export type StoreContextProviderProps = {
 export enum ReducerActions {
   ADD_TODO = '@ADD_TODO',
   INIT_TODOS = '@INIT_TODOS',
+  REMOVE_TODO = '@REMOVE_TODO',
 }
 
 export const reducerInitState: ReducerState = {
@@ -36,6 +37,8 @@ export const StoreContextProvider = memo(function StoreContextProvider({ childre
       switch (action.type) {
         case ReducerActions.ADD_TODO:
           return { ...state, todos: [...state.todos, action.payload] };
+        case ReducerActions.REMOVE_TODO:
+          return { ...state, todos: state.todos.filter(({ id }) => id !== action.payload) };
         case ReducerActions.INIT_TODOS:
           return { ...state, todos: action.payload };
         default:

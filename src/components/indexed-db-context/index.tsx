@@ -1,5 +1,5 @@
 import { createContext, memo, ReactNode, useCallback, useEffect, useState } from 'react';
-import { openIndexedDB, OpenIndexedDBParams } from 'store';
+import { openIndexedDB, OpenIndexedDBParams } from 'indexed-db';
 import getConfig from 'next/config';
 import { nanoid } from 'nanoid';
 
