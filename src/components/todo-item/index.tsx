@@ -24,7 +24,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   const [isSubTodosShown, setIsSubTodosShown] = useState(false);
 
   const {
-    state: { draggableTodo },
+    state: { draggableTodo, todos },
     dispatch,
   } = useContext(TodoStoreContext);
 
@@ -104,7 +104,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
   return (
     <div
-      className="grid grid-flow-row items-center gap-y-3"
+      className="grid grid-flow-row items-center gap-y-3 bg-gray-100 rounded-md p-2"
       draggable={draggable}
       onDragStartCapture={startDragging}
       onDragEndCapture={endDragging}
@@ -114,15 +114,18 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
       onDropCapture={drop}
     >
       <div className="grid grid-flow-col gap-x-2 items-center">
-        <button
-          className={classNames('transform transition-transform', {
-            'rotate-0': !isSubTodosShown,
-            'rotate-90': isSubTodosShown,
-          })}
-          onClick={toggleSubTodos}
-        >
-          <span>&gt;</span>
-        </button>
+        <div className="justify-self-center w-10">
+          <span className="truncate">{todos[todo.id]?.length || ''}</span>
+          <button
+            className={classNames('ml-2 transform transition-transform', {
+              'rotate-0': !isSubTodosShown,
+              'rotate-90': isSubTodosShown,
+            })}
+            onClick={toggleSubTodos}
+          >
+            <span>&gt;</span>
+          </button>
+        </div>
 
         <div className="relative grid place-content-center">
           <input
@@ -149,10 +152,10 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
         <input
           className={classNames(
-            'p-2 outline-none border border-transparent rounded-md transition-colors',
+            'p-2 w-full outline-none border border-transparent rounded-md transition-colors bg-gray-100',
             { 'line-through text-gray-500': watch('completed') },
             {
-              'hover:border-gray-300 focus:border-gray-300': readOnly,
+              'hover:border-gray-500 focus:border-gray-500': readOnly,
               'border-blue-400': !readOnly,
             },
           )}
@@ -166,7 +169,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
         <button
           className={classNames(
-            'flex justify-center items-center border border-red-500 transition-colors',
+            'justify-self-center flex justify-center items-center border border-red-500 transition-colors',
             'hover:bg-red-500 focus:bg-red-500 w-5 h-5 rounded-full group outline-none',
           )}
           onClick={deleteTodo}

@@ -25,7 +25,7 @@ export const TodoList = memo(function TodoList({ parent }: TodoListProps) {
   }, [dispatch, getAll, parent]);
 
   return (
-    <ul className="grid grid-flow-row gap-y-3">
+    <ul className="grid grid-flow-row gap-y-3 w-full max-w-xl justify-self-center ">
       {(todos[parent] ?? []).map(todo => (
         <li key={todo.id}>
           <TodoItem todo={todo} />
