@@ -62,6 +62,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   }, [getValues, put, todo]);
 
   const startDragging = useCallback(() => {
+    console.log(todo.desc);
     dispatch({ type: TodoStoreActions.SET_DRAGGABLE_TODO, payload: todo });
   }, [dispatch, todo]);
 
@@ -85,7 +86,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
     async (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      if (draggableTodo && todo.order !== draggableTodo.order) {
+      if (draggableTodo && todo.order !== draggableTodo.order && todo.parent === draggableTodo.parent) {
         const currentTodo = { ...draggableTodo, order: todo.order };
         const targetTodo = { ...todo, order: draggableTodo.order };
         await put(currentTodo);
@@ -105,12 +106,12 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   return (
     <div
       draggable={draggable}
-      onDragStart={startDragging}
-      onDragEnd={endDragging}
-      onDragEnter={dragEnter}
-      onDragOver={dragOver}
-      onDragLeave={dragLeave}
-      onDrop={drop}
+      onDragStartCapture={startDragging}
+      onDragEndCapture={endDragging}
+      onDragEnterCapture={dragEnter}
+      onDragOverCapture={dragOver}
+      onDragLeaveCapture={dragLeave}
+      onDropCapture={drop}
     >
       <button onClick={toggleSubTodos}>&gt;</button>
 
