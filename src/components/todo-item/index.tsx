@@ -22,6 +22,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   const [readOnly, setReadOnly] = useState(true);
   const [draggable, setDraggable] = useState(false);
   const [isSubTodosShown, setIsSubTodosShown] = useState(false);
+  const [isDraggedOver, setIsDraggedOver] = useState(false);
 
   const {
     state: { draggableTodo, todos },
@@ -73,12 +74,13 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
   const dragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.dropEffect = 'move';
+    setIsDraggedOver(true);
   }, []);
 
   const dragLeave = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    setIsDraggedOver(false);
   }, []);
 
   const drop = useCallback(
@@ -93,6 +95,8 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
         dispatch({ type: TodoStoreActions.UPDATE_TODO, payload: currentTodo });
         dispatch({ type: TodoStoreActions.UPDATE_TODO, payload: targetTodo });
       }
+
+      setIsDraggedOver(false);
     },
 
     [dispatch, draggableTodo, put, todo],
@@ -104,7 +108,10 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
   return (
     <div
-      className="grid grid-flow-row items-center gap-y-3 bg-gray-100 rounded-md p-2"
+      className={classNames('grid grid-flow-row items-center gap-y-3 bg-gray-100 rounded-md p-2 border border-dashed', {
+        'border-transparent': !isDraggedOver,
+        'border-gray-700': isDraggedOver,
+      })}
       draggable={draggable}
       onDragStartCapture={startDragging}
       onDragEndCapture={endDragging}
