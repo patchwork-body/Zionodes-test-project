@@ -47,9 +47,11 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   }, []);
 
   const saveChanges = useCallback(() => {
+    const nextTodo = { ...todo, desc: getValues('desc') };
     setReadOnly(true);
-    put({ ...todo, desc: getValues('desc') });
-  }, [getValues, put, todo]);
+    put(nextTodo);
+    dispatch({ type: TodoStoreActions.UPDATE_TODO, payload: nextTodo });
+  }, [dispatch, getValues, put, todo]);
 
   const deleteTodo = useCallback(() => {
     remove(todo.id);
@@ -57,8 +59,10 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   }, [dispatch, remove, todo.id, todo.parent]);
 
   const toggleCheckbox = useCallback(() => {
-    put({ ...todo, completed: !getValues('completed') });
-  }, [getValues, put, todo]);
+    const nextTodo = { ...todo, completed: !getValues('completed') };
+    put(nextTodo);
+    dispatch({ type: TodoStoreActions.UPDATE_TODO, payload: nextTodo });
+  }, [dispatch, getValues, put, todo]);
 
   const startDragging = useCallback(() => {
     dispatch({ type: TodoStoreActions.SET_DRAGGABLE_TODO, payload: todo });

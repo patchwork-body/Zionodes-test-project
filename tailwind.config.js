@@ -3,6 +3,10 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      gridTemplateColumns: {
+        'auto/1fr': 'auto 1fr',
+      },
+
       cursor: {
         grab: 'grab',
       },

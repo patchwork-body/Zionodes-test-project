@@ -2,7 +2,7 @@ import { memo, useContext, useEffect } from 'react';
 import type { Todo } from 'helpers/create-todo';
 import { TodoItem } from 'components/todo-item';
 import { useROTransaction } from 'hooks/use-ro-transaction';
-import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { Filters, TodoStoreActions, TodoStoreContext } from 'components/store-context';
 
 export type TodoListProps = {
   parent: string;
@@ -10,7 +10,7 @@ export type TodoListProps = {
 
 export const TodoList = memo(function TodoList({ parent }: TodoListProps) {
   const {
-    state: { todos, searchQuery },
+    state: { todos, searchQuery, filter },
     dispatch,
   } = useContext(TodoStoreContext);
 
@@ -28,6 +28,18 @@ export const TodoList = memo(function TodoList({ parent }: TodoListProps) {
     <ul className="grid grid-flow-row gap-y-3 w-full max-w-xl justify-self-center ">
       {(todos[parent] ?? [])
         .filter(({ desc }: Todo) => desc.includes(searchQuery))
+        .filter(({ completed }: Todo) => {
+          switch (filter) {
+            case Filters.Completed:
+              return completed;
+
+            case Filters.NotCompleted:
+              return !completed;
+
+            default:
+              return true;
+          }
+        })
         .map(todo => (
           <li key={todo.id}>
             <TodoItem todo={todo} />

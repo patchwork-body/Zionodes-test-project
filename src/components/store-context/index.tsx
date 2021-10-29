@@ -4,16 +4,24 @@ import { createContext, Dispatch, memo, ReactNode, useReducer } from 'react';
 export type TodoStoreState = {
   draggableTodo: Todo | null;
   searchQuery: string;
+  filter: Filters;
   todos: {
     root: Todo[];
     [key: string]: Todo[];
   };
 };
 
+export enum Filters {
+  All = 'all',
+  Completed = 'completed',
+  NotCompleted = 'not-completed',
+}
+
 export enum TodoStoreActions {
   INIT_TODOS = '@INIT_TODOS',
   SET_DRAGGABLE_TODO = '@SET_DRAGGABLE_TODO',
   SET_SEARCH_QUERY = '@SET_SEARCH_QUERY',
+  SET_FILTER = '@SET_FILTER',
   ADD_TODO = '@ADD_TODO',
   UPDATE_TODO = '@UPDATE_TODO',
   REMOVE_TODO = '@REMOVE_TODO',
@@ -34,6 +42,7 @@ export const reducerInitState: TodoStoreState = {
   },
 
   searchQuery: '',
+  filter: Filters.All,
   draggableTodo: null,
 };
 
@@ -64,6 +73,9 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
 
         case TodoStoreActions.SET_SEARCH_QUERY:
           return { ...state, searchQuery: action.payload };
+
+        case TodoStoreActions.SET_FILTER:
+          return { ...state, filter: action.payload };
 
         case TodoStoreActions.ADD_TODO:
           return {
@@ -104,6 +116,7 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
     {
       draggableTodo: null,
       searchQuery: '',
+      filter: Filters.All,
       todos: {
         root: [],
       },
