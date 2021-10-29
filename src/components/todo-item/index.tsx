@@ -6,6 +6,7 @@ import { useRWTransaction } from 'hooks/use-rw-transaction';
 import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
 import { TodoForm } from 'components/todo-form';
 import { TodoList } from 'components/todo-list';
+import classNames from 'classnames';
 
 export type TodoItemProps = {
   todo: Todo;
@@ -27,7 +28,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
     dispatch,
   } = useContext(TodoStoreContext);
 
-  const { register, getValues } = useForm<FormValues>({
+  const { register, getValues, watch } = useForm<FormValues>({
     defaultValues: {
       desc: todo.desc,
       completed: todo.completed,
@@ -38,14 +39,11 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
     setReadOnly(false);
   }, []);
 
-  const startEditingByPressEnter = useCallback(
-    (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        startEditing();
-      }
-    },
-    [startEditing],
-  );
+  const toggleReadOnlyOnPressEnter = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setReadOnly(previous => !previous);
+    }
+  }, []);
 
   const saveChanges = useCallback(() => {
     setReadOnly(true);
@@ -62,7 +60,6 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   }, [getValues, put, todo]);
 
   const startDragging = useCallback(() => {
-    console.log(todo.desc);
     dispatch({ type: TodoStoreActions.SET_DRAGGABLE_TODO, payload: todo });
   }, [dispatch, todo]);
 
@@ -76,6 +73,8 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
   const dragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.dropEffect = 'move';
   }, []);
 
   const dragLeave = useCallback((event: DragEvent<HTMLDivElement>) => {
@@ -105,6 +104,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
 
   return (
     <div
+      className="grid grid-flow-row items-center gap-y-3"
       draggable={draggable}
       onDragStartCapture={startDragging}
       onDragEndCapture={endDragging}
@@ -113,35 +113,88 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
       onDragLeaveCapture={dragLeave}
       onDropCapture={drop}
     >
-      <button onClick={toggleSubTodos}>&gt;</button>
+      <div className="grid grid-flow-col gap-x-2 items-center">
+        <button
+          className={classNames('transform transition-transform', {
+            'rotate-0': !isSubTodosShown,
+            'rotate-90': isSubTodosShown,
+          })}
+          onClick={toggleSubTodos}
+        >
+          <span>&gt;</span>
+        </button>
 
-      <input type="checkbox" {...register('completed', { onChange: toggleCheckbox })} />
+        <div className="relative grid place-content-center">
+          <input
+            className={classNames(
+              'outline-none appearance-none border hover:border-4 focus:border-4 border-yellow-300 rounded-full w-5 h-5 transition-colors',
+              { 'bg-yellow-300': watch('completed') },
+            )}
+            type="checkbox"
+            {...register('completed', { onChange: toggleCheckbox })}
+          />
 
-      <input
-        type="text"
-        {...register('desc', { required: true, minLength: 5, maxLength: 20 })}
-        onDoubleClick={startEditing}
-        onKeyPress={startEditingByPressEnter}
-        onBlur={saveChanges}
-        readOnly={readOnly}
-      />
+          <span
+            className={classNames(
+              'absolute inset-0 grid place-content-center opacity-0 transition-opacity pointer-events-none',
+              {
+                'opacity-0': !watch('completed'),
+                'opacity-100': watch('completed'),
+              },
+            )}
+          >
+            <Image width="7" height="7" src="/check.svg" alt="checkmark" />
+          </span>
+        </div>
 
-      <button onClick={deleteTodo} aria-label="delete todo">
-        <Image width="5" height="5" src="/cross.svg" alt="cross" />
-      </button>
+        <input
+          className={classNames(
+            'p-2 outline-none border border-transparent rounded-md transition-colors',
+            { 'line-through text-gray-500': watch('completed') },
+            {
+              'hover:border-gray-300 focus:border-gray-300': readOnly,
+              'border-blue-400': !readOnly,
+            },
+          )}
+          type="text"
+          {...register('desc', { required: true, minLength: 5, maxLength: 20 })}
+          onDoubleClick={startEditing}
+          onKeyPress={toggleReadOnlyOnPressEnter}
+          onBlur={saveChanges}
+          readOnly={readOnly}
+        />
 
-      <Image
-        draggable={false}
-        onMouseEnter={() => setDraggable(true)}
-        onMouseLeave={() => setDraggable(false)}
-        width="10"
-        height="10"
-        src="/drag.svg"
-        alt="cross"
-      />
+        <button
+          className={classNames(
+            'flex justify-center items-center border border-red-500 transition-colors',
+            'hover:bg-red-500 focus:bg-red-500 w-5 h-5 rounded-full group outline-none',
+          )}
+          onClick={deleteTodo}
+          aria-label="delete todo"
+        >
+          <Image
+            className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity"
+            width="6"
+            height="6"
+            src="/cross.svg"
+            alt="cross sign"
+          />
+        </button>
+
+        <Image
+          className="cursor-grab"
+          draggable={false}
+          onMouseEnter={() => setDraggable(true)}
+          onMouseLeave={() => setDraggable(false)}
+          width="15"
+          height="15"
+          src="/drag.svg"
+          alt="drag indicator"
+        />
+      </div>
 
       {isSubTodosShown && (
-        <div>
+        <div className="grid grid-flow-row pl-10 gap-y-3">
           <TodoForm parent={todo.id} />
           <TodoList parent={todo.id} />
         </div>

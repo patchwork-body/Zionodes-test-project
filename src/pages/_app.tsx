@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { IndexedDBContextProvider } from 'components/indexed-db-context';
 import getConfig from 'next/config';
 import { TodoStoreContextProvider } from 'components/store-context';
+import 'tailwindcss/tailwind.css';
 
 const { publicRuntimeConfig } = getConfig();
 
