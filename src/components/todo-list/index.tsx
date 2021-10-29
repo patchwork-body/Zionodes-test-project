@@ -10,7 +10,7 @@ export type TodoListProps = {
 
 export const TodoList = memo(function TodoList({ parent }: TodoListProps) {
   const {
-    state: { todos },
+    state: { todos, searchQuery },
     dispatch,
   } = useContext(TodoStoreContext);
 
@@ -26,11 +26,13 @@ export const TodoList = memo(function TodoList({ parent }: TodoListProps) {
 
   return (
     <ul className="grid grid-flow-row gap-y-3 w-full max-w-xl justify-self-center ">
-      {(todos[parent] ?? []).map(todo => (
-        <li key={todo.id}>
-          <TodoItem todo={todo} />
-        </li>
-      ))}
+      {(todos[parent] ?? [])
+        .filter(({ desc }: Todo) => desc.includes(searchQuery))
+        .map(todo => (
+          <li key={todo.id}>
+            <TodoItem todo={todo} />
+          </li>
+        ))}
     </ul>
   );
 });

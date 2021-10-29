@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import Head from 'next/head';
 import { TodoForm } from 'components/todo-form';
 import { TodoList } from 'components/todo-list';
+import { Search } from 'components/Search';
 
 const Home = memo(function Home() {
   return (
@@ -14,6 +15,11 @@ const Home = memo(function Home() {
 
       <div className="grid w-full max-w-3xl justify-self-center gap-y-7">
         <TodoForm parent="root" />
+
+        <div className="grid-cols-2">
+          <Search />
+        </div>
+
         <TodoList parent="root" />
       </div>
     </div>

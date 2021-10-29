@@ -3,6 +3,7 @@ import { createContext, Dispatch, memo, ReactNode, useReducer } from 'react';
 
 export type TodoStoreState = {
   draggableTodo: Todo | null;
+  searchQuery: string;
   todos: {
     root: Todo[];
     [key: string]: Todo[];
@@ -12,6 +13,7 @@ export type TodoStoreState = {
 export enum TodoStoreActions {
   INIT_TODOS = '@INIT_TODOS',
   SET_DRAGGABLE_TODO = '@SET_DRAGGABLE_TODO',
+  SET_SEARCH_QUERY = '@SET_SEARCH_QUERY',
   ADD_TODO = '@ADD_TODO',
   UPDATE_TODO = '@UPDATE_TODO',
   REMOVE_TODO = '@REMOVE_TODO',
@@ -31,6 +33,7 @@ export const reducerInitState: TodoStoreState = {
     root: [],
   },
 
+  searchQuery: '',
   draggableTodo: null,
 };
 
@@ -50,11 +53,17 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
         case TodoStoreActions.INIT_TODOS:
           return {
             ...state,
-            todos: { ...state.todos, [action.payload.parent]: action.payload.todos.sort(sortByOrder) },
+            todos: {
+              ...state.todos,
+              [action.payload.parent]: action.payload.todos.sort(sortByOrder),
+            },
           };
 
         case TodoStoreActions.SET_DRAGGABLE_TODO:
           return { ...state, draggableTodo: action.payload };
+
+        case TodoStoreActions.SET_SEARCH_QUERY:
+          return { ...state, searchQuery: action.payload };
 
         case TodoStoreActions.ADD_TODO:
           return {
@@ -94,6 +103,7 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
 
     {
       draggableTodo: null,
+      searchQuery: '',
       todos: {
         root: [],
       },
