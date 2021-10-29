@@ -1,4 +1,4 @@
-export const promisify = (request: any): Promise<any> => {
+export function promisify<ResponseType = any>(request: IDBRequest): Promise<ResponseType> {
   return new Promise((resolve, reject) => {
     request.onsuccess = () => {
       resolve(request.result);
@@ -8,4 +8,4 @@ export const promisify = (request: any): Promise<any> => {
       reject(request.error);
     };
   });
-};
+}

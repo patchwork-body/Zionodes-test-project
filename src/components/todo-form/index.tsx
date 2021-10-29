@@ -36,7 +36,7 @@ export const TodoForm = memo(function TodoForm({ parent }: TodoFormProps) {
       const todo = createTodo({ desc, order: nextOrder, parent });
 
       await add(todo);
-      dispatch({ type: TodoStoreActions.ADD_TODO, payload: { parent, todo } });
+      dispatch({ type: TodoStoreActions.ADD_TODO, payload: todo });
 
       reset();
     },

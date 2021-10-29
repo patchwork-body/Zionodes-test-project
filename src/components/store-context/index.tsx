@@ -61,7 +61,7 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
             ...state,
             todos: {
               ...state.todos,
-              [action.payload.parent]: [...state.todos[action.payload.parent], action.payload.todo],
+              [action.payload.parent]: [...state.todos[action.payload.parent], action.payload],
             },
           };
 

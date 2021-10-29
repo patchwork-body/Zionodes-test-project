@@ -14,7 +14,7 @@ export function useRWTransaction<T extends Record<string, any>>(): {
     (value: T): Promise<IDBValidKey> => {
       const transaction = createTransaction({ store, type: 'readwrite' });
       const request = transaction.add(value);
-      return promisify(request);
+      return promisify<IDBValidKey>(request);
     },
     [store],
   );
@@ -23,17 +23,33 @@ export function useRWTransaction<T extends Record<string, any>>(): {
     (value: T): Promise<IDBValidKey> => {
       const transaction = createTransaction({ store, type: 'readwrite' });
       const request = transaction.put(value);
-      return promisify(request);
+      return promisify<IDBValidKey>(request);
     },
     [store],
   );
 
   const remove = useCallback(
-    (id: any): Promise<undefined> => {
+    async (id: any) => {
       const transaction = createTransaction({ store, type: 'readwrite' });
-      const request = transaction.delete(id);
-      return promisify(request);
+      const request = transaction.index('parent_index').openKeyCursor(IDBKeyRange.only(id));
+
+      const cursor = await promisify<IDBCursor>(request);
+      while (cursor) {
+        try {
+          await promisify(transaction.delete(cursor.primaryKey));
+          cursor.continue();
+        } catch (error) {
+          if (error instanceof DOMException) {
+            break;
+          }
+
+          throw error;
+        }
+      }
+
+      await promisify(transaction.delete(id));
     },
+
     [store],
   );
 
