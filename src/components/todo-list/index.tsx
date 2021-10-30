@@ -14,7 +14,7 @@ export const TodoList = memo(function TodoList({ parent }: TodoListProps) {
     dispatch,
   } = useContext(TodoStoreContext);
 
-  const { getAll } = useROTransaction<Todo>();
+  const { getAll } = useROTransaction<Todo>('todos');
 
   useEffect(() => {
     getAll(parent)

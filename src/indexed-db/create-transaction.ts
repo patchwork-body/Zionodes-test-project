@@ -1,12 +1,9 @@
-import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
-
 export type CreateTransactionParams = {
   store: IDBDatabase;
+  name: 'todos' | 'filters';
   type: IDBTransactionMode;
 };
 
-export const createTransaction = ({ store, type }: CreateTransactionParams) => {
-  return store.transaction(publicRuntimeConfig.STORE_NAME, type).objectStore(publicRuntimeConfig.STORE_NAME);
+export const createTransaction = ({ store, type, name }: CreateTransactionParams) => {
+  return store.transaction(name, type).objectStore(name);
 };

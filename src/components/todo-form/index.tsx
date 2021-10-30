@@ -19,7 +19,7 @@ export const TodoForm = memo(function TodoForm({ parent }: TodoFormProps) {
     dispatch,
   } = useContext(TodoStoreContext);
 
-  const { add } = useRWTransaction<Partial<Todo>>();
+  const { add } = useRWTransaction<Partial<Todo>>('todos');
 
   const { register, handleSubmit, reset, formState } = useForm<FormValues>({
     defaultValues: {

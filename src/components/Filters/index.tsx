@@ -1,6 +1,6 @@
 import { memo, useContext, useEffect } from 'react';
 import { Filters as FiltersEnum, TodoStoreActions, TodoStoreContext } from 'components/store-context';
-import { Radio } from './Radio';
+import { Radio } from './radio';
 
 export const Filters = memo(function Filters() {
   const { dispatch } = useContext(TodoStoreContext);

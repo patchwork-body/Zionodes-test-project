@@ -18,7 +18,7 @@ type FormValues = {
 };
 
 export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
-  const { put, remove } = useRWTransaction<Todo>();
+  const { put, remove } = useRWTransaction<Todo>('todos');
   const [readOnly, setReadOnly] = useState(true);
   const [draggable, setDraggable] = useState(false);
   const [isSubTodosShown, setIsSubTodosShown] = useState(false);

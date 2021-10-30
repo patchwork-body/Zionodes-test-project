@@ -1,9 +1,11 @@
 import { IndexedDBContext } from 'components/indexed-db-context';
 import { promisify } from 'helpers/promisify';
 import { useCallback, useContext } from 'react';
-import { createTransaction } from 'indexed-db/create-transaction';
+import { createTransaction, CreateTransactionParams } from 'indexed-db/create-transaction';
 
-export function useRWTransaction<T extends Record<string, any>>(): {
+export function useRWTransaction<T extends Record<string, any>>(
+  name: CreateTransactionParams['name'],
+): {
   add: (value: T) => Promise<IDBValidKey>;
   put: (value: T) => Promise<IDBValidKey>;
   remove: (id: any) => void;
@@ -12,25 +14,25 @@ export function useRWTransaction<T extends Record<string, any>>(): {
 
   const add = useCallback(
     (value: T): Promise<IDBValidKey> => {
-      const transaction = createTransaction({ store, type: 'readwrite' });
+      const transaction = createTransaction({ store, type: 'readwrite', name });
       const request = transaction.add(value);
       return promisify<IDBValidKey>(request);
     },
-    [store],
+    [name, store],
   );
 
   const put = useCallback(
     (value: T): Promise<IDBValidKey> => {
-      const transaction = createTransaction({ store, type: 'readwrite' });
+      const transaction = createTransaction({ store, type: 'readwrite', name });
       const request = transaction.put(value);
       return promisify<IDBValidKey>(request);
     },
-    [store],
+    [name, store],
   );
 
   const remove = useCallback(
     async (id: any) => {
-      const transaction = createTransaction({ store, type: 'readwrite' });
+      const transaction = createTransaction({ store, type: 'readwrite', name });
       await promisify(transaction.delete(id));
 
       const request = transaction.index('parent_index').openKeyCursor(IDBKeyRange.only(id));
@@ -51,7 +53,7 @@ export function useRWTransaction<T extends Record<string, any>>(): {
         }
       }
     },
-    [store],
+    [name, store],
   );
 
   return { add, put, remove };
