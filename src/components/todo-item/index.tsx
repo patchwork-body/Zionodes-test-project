@@ -1,12 +1,13 @@
 import { memo, useCallback, useState, KeyboardEvent, useContext, DragEvent } from 'react';
 import Image from 'next/image';
+import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { Todo } from 'helpers/create-todo';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
 import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
 import { TodoForm } from 'components/todo-form';
 import { TodoList } from 'components/todo-list';
-import classNames from 'classnames';
+import { RemoveButton } from 'components/remove-button';
 
 export type TodoItemProps = {
   todo: Todo;
@@ -178,22 +179,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
           readOnly={readOnly}
         />
 
-        <button
-          className={classNames(
-            'justify-self-center flex justify-center items-center border border-red-500 transition-colors',
-            'hover:bg-red-500 focus:bg-red-500 w-5 h-5 rounded-full group outline-none',
-          )}
-          onClick={deleteTodo}
-          aria-label="delete todo"
-        >
-          <Image
-            className="opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity"
-            width="6"
-            height="6"
-            src="/cross.svg"
-            alt="cross sign"
-          />
-        </button>
+        <RemoveButton click={deleteTodo} />
 
         <Image
           className="cursor-grab"

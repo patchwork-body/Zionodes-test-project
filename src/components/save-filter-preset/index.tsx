@@ -12,7 +12,6 @@ export const SaveFilterPreset = memo(function SaveFilterPreset() {
 
   const click = useCallback(async () => {
     if (searchQuery) {
-      console.log(searchQuery);
       await add(createFilter({ filterName: filter, searchQuery }));
     }
   }, [add, filter, searchQuery]);
