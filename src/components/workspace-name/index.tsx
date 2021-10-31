@@ -14,8 +14,10 @@ export const WorkspaceName = memo(function WorkspaceName() {
   }, []);
 
   const restore = useCallback(() => {
-    setValue(DEFAULT_VALUE);
-  }, []);
+    if (!value) {
+      setValue(DEFAULT_VALUE);
+    }
+  }, [value]);
 
   useEffect(() => {
     const defaultValue = sessionStorage.getItem(SESSION_STORAGE_KEY) || DEFAULT_VALUE;
