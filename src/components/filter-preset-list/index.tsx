@@ -1,4 +1,4 @@
-import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-context';
+import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-store-context';
 import { FilterWithId } from 'helpers/create-filter';
 import { useROTransaction } from 'hooks/use-ro-transaction';
 import { memo, useContext, useEffect } from 'react';

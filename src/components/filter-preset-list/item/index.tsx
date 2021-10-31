@@ -4,7 +4,7 @@ import { FilterWithId } from 'helpers/create-filter';
 import classNames from 'classnames';
 import { RemoveButton } from 'components/remove-button';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
-import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-context';
+import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-store-context';
 
 export type ItemProps = {
   preset: FilterWithId;

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-context';
+import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-store-context';
 import { TodoStoreContext } from 'contexts/todo-store-context';
 import { createFilter, Filter } from 'helpers/create-filter';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
@@ -16,8 +16,8 @@ export const SaveFilterPreset = memo(function SaveFilterPreset() {
   const click = useCallback(async () => {
     if (searchQuery) {
       const newFilter = createFilter({ filterName: filter, searchQuery });
-      dispatch({ type: FilterPresetStoreActions.ADD_FILTER_PRESET, payload: newFilter });
-      await add(newFilter);
+      const id = await add(newFilter);
+      dispatch({ type: FilterPresetStoreActions.ADD_FILTER_PRESET, payload: { ...newFilter, id } });
     }
   }, [add, dispatch, filter, searchQuery]);
 

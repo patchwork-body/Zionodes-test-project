@@ -38,7 +38,7 @@ export const FilterPresetStoreContextProvider = memo(function FilterPresetStoreC
           return [...state, action.payload];
 
         case FilterPresetStoreActions.REMOVE_FILTER_PRESET:
-          return state.filter(({ id }) => id === action.payload);
+          return state.filter(({ id }) => id !== action.payload);
 
         default:
           return state;
