@@ -3,7 +3,7 @@ import { ChangeEvent, memo, useCallback, useContext, useEffect } from 'react';
 
 const SESSION_STORAGE_KEY = 'searchQuery';
 
-export const Search = memo(function Search() {
+export const SearchQuery = memo(function SearchQuery() {
   const {
     state: { searchQuery },
     dispatch,
