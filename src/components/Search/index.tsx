@@ -29,7 +29,7 @@ export const Search = memo(function Search() {
         <input
           value={searchQuery}
           onChange={search}
-          className="w-full p-2 border border-gray-700 focus:border-blue-400 rounded-md outline-none"
+          className="w-full p-2 border border-gray-700 focus:border-blue-400 hover:border-blue-400 rounded-md outline-none"
           type="search"
         />
       </label>

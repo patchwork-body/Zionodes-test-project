@@ -6,6 +6,7 @@ import { Search } from 'components/search';
 import { Filters } from 'components/filters';
 import { SaveFilterPreset } from 'components/save-filter-preset';
 import { FilterPresetList } from 'components/fitler-preset-list';
+import { WorkspaceName } from 'components/workspace-name';
 
 const Home = memo(function Home() {
   return (
@@ -17,6 +18,7 @@ const Home = memo(function Home() {
       </Head>
 
       <div className="grid w-full max-w-3xl justify-self-center gap-y-7">
+        <WorkspaceName />
         <TodoForm parent="root" />
 
         <div className="grid grid-flow-row sm:grid-cols-auto/1fr gap-y-5 sm:gap-x-5 bg-yellow-50 p-3 rounded-md">
