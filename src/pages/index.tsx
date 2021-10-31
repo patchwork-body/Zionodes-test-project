@@ -1,11 +1,11 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import Head from 'next/head';
 import { TodoForm } from 'components/todo-form';
 import { TodoList } from 'components/todo-list';
 import { Search } from 'components/search';
-import { Filters } from 'components/filters';
+import { SelectFilter } from 'components/select-filter';
 import { SaveFilterPreset } from 'components/save-filter-preset';
-import { FilterPresetList } from 'components/fitler-preset-list';
+import { FilterPresetList } from 'components/filter-preset-list';
 import { WorkspaceName } from 'components/workspace-name';
 
 const Home = memo(function Home() {
@@ -25,7 +25,7 @@ const Home = memo(function Home() {
           <Search />
 
           <div className="grid grid-cols-1fr/auto">
-            <Filters />
+            <SelectFilter />
             <SaveFilterPreset />
           </div>
         </div>

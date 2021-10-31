@@ -1,8 +1,8 @@
 import { memo, useContext, useEffect } from 'react';
-import { Filters as FiltersEnum, TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { Filters, TodoStoreActions, TodoStoreContext } from 'components/store-context';
 import { Radio } from './radio';
 
-export const Filters = memo(function Filters() {
+export const SelectFilter = memo(function SelectFilter() {
   const { dispatch } = useContext(TodoStoreContext);
 
   useEffect(() => {
@@ -17,9 +17,9 @@ export const Filters = memo(function Filters() {
       <span className="text-sm text-gray-500">Filters:</span>
 
       <div className="grid grid-flow-col self-start">
-        <Radio value={FiltersEnum.All} label="Show All" />
-        <Radio value={FiltersEnum.Completed} label="Show Completed" />
-        <Radio value={FiltersEnum.NotCompleted} label="Show Not Completed" />
+        <Radio value={Filters.All} label="Show All" />
+        <Radio value={Filters.Completed} label="Show Completed" />
+        <Radio value={Filters.NotCompleted} label="Show Not Completed" />
       </div>
     </div>
   );
