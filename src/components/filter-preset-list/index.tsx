@@ -1,19 +1,20 @@
+import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-context';
 import { FilterWithId } from 'helpers/create-filter';
 import { useROTransaction } from 'hooks/use-ro-transaction';
-import { memo, useEffect, useState } from 'react';
+import { memo, useContext, useEffect } from 'react';
 import { Item } from './item';
 
 export const FilterPresetList = memo(function FilterPresetList() {
-  const [presets, setPresets] = useState<FilterWithId[]>([]);
+  const { state: presets, dispatch } = useContext(FilterPresetStoreContext);
   const { getAll } = useROTransaction<FilterWithId>('filters');
 
   useEffect(() => {
     getAll()
       .then((presets = []) => {
-        setPresets(presets);
+        dispatch({ type: FilterPresetStoreActions.INIT_FILTER_PRESET, payload: presets });
       })
       .catch(console.error);
-  }, [getAll]);
+  }, [dispatch, getAll]);
 
   return (
     <ul className="grid grid-flow-row gap-y-2">

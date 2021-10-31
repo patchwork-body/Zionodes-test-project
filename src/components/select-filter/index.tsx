@@ -1,5 +1,5 @@
 import { memo, useContext, useEffect } from 'react';
-import { Filters, TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { Filters, TodoStoreActions, TodoStoreContext } from 'contexts/todo-store-context';
 import { Radio } from './radio';
 
 export const SelectFilter = memo(function SelectFilter() {

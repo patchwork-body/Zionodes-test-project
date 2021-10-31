@@ -1,4 +1,4 @@
-import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { TodoStoreActions, TodoStoreContext } from 'contexts/todo-store-context';
 import { createTodo, Todo } from 'helpers/create-todo';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
 import { memo, useCallback, useContext } from 'react';

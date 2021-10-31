@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { TodoStoreContext } from 'components/store-context';
+import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-context';
+import { TodoStoreContext } from 'contexts/todo-store-context';
 import { createFilter, Filter } from 'helpers/create-filter';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
 import { memo, useCallback, useContext } from 'react';
@@ -8,13 +9,17 @@ export const SaveFilterPreset = memo(function SaveFilterPreset() {
   const {
     state: { filter, searchQuery },
   } = useContext(TodoStoreContext);
+
+  const { dispatch } = useContext(FilterPresetStoreContext);
   const { add } = useRWTransaction<Filter>('filters');
 
   const click = useCallback(async () => {
     if (searchQuery) {
-      await add(createFilter({ filterName: filter, searchQuery }));
+      const newFilter = createFilter({ filterName: filter, searchQuery });
+      dispatch({ type: FilterPresetStoreActions.ADD_FILTER_PRESET, payload: newFilter });
+      await add(newFilter);
     }
-  }, [add, filter, searchQuery]);
+  }, [add, dispatch, filter, searchQuery]);
 
   return (
     <button

@@ -1,4 +1,4 @@
-import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { TodoStoreActions, TodoStoreContext } from 'contexts/todo-store-context';
 import { ChangeEvent, memo, useCallback, useContext, useEffect } from 'react';
 
 const SESSION_STORAGE_KEY = 'searchQuery';

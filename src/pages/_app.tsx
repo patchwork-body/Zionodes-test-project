@@ -1,7 +1,8 @@
 import type { AppProps } from 'next/app';
 import { useCallback } from 'react';
-import { IndexedDBContextProvider } from 'components/indexed-db-context';
-import { TodoStoreContextProvider } from 'components/store-context';
+import { IndexedDBContextProvider } from 'contexts/indexed-db-context';
+import { TodoStoreContextProvider } from 'contexts/todo-store-context';
+import { FilterPresetStoreContextProvider } from 'contexts/filter-preset-context';
 import 'tailwindcss/tailwind.css';
 
 function App({ Component, pageProps }: AppProps) {
@@ -14,7 +15,9 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <IndexedDBContextProvider init={init}>
       <TodoStoreContextProvider>
-        <Component {...pageProps} />
+        <FilterPresetStoreContextProvider>
+          <Component {...pageProps} />
+        </FilterPresetStoreContextProvider>
       </TodoStoreContextProvider>
     </IndexedDBContextProvider>
   );

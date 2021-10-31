@@ -1,4 +1,4 @@
-import { IndexedDBContext } from 'components/indexed-db-context';
+import { IndexedDBContext } from 'contexts/indexed-db-context';
 import { promisify } from 'helpers/promisify';
 import { useCallback, useContext } from 'react';
 import { createTransaction, CreateTransactionParams } from 'indexed-db/create-transaction';

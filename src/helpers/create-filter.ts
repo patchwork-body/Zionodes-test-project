@@ -1,4 +1,4 @@
-import { Filters } from 'components/store-context';
+import { Filters } from 'contexts/todo-store-context';
 
 export type Filter = {
   searchQuery: string;

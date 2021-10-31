@@ -1,9 +1,10 @@
 import { memo, useCallback, useContext, useMemo } from 'react';
-import { TodoStoreActions, TodoStoreContext, Filters } from 'components/store-context';
+import { TodoStoreActions, TodoStoreContext, Filters } from 'contexts/todo-store-context';
 import { FilterWithId } from 'helpers/create-filter';
 import classNames from 'classnames';
 import { RemoveButton } from 'components/remove-button';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
+import { FilterPresetStoreActions, FilterPresetStoreContext } from 'contexts/filter-preset-context';
 
 export type ItemProps = {
   preset: FilterWithId;
@@ -14,6 +15,7 @@ export const Item = memo(function Item({ preset }: ItemProps) {
     state: { searchQuery, filter },
     dispatch,
   } = useContext(TodoStoreContext);
+  const { dispatch: filterDispatch } = useContext(FilterPresetStoreContext);
 
   const { remove } = useRWTransaction('filters');
 
@@ -24,9 +26,10 @@ export const Item = memo(function Item({ preset }: ItemProps) {
 
   const removePreset = useCallback(async () => {
     await remove(preset.id);
+    filterDispatch({ type: FilterPresetStoreActions.REMOVE_FILTER_PRESET, payload: preset.id });
     dispatch({ type: TodoStoreActions.SET_SEARCH_QUERY, payload: '' });
     dispatch({ type: TodoStoreActions.SET_FILTER, payload: Filters.All });
-  }, [dispatch, preset.id, remove]);
+  }, [dispatch, filterDispatch, preset.id, remove]);
 
   const activePreset = useMemo(
     () => preset.searchQuery === searchQuery && preset.filterName === filter,

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { Todo } from 'helpers/create-todo';
 import { useRWTransaction } from 'hooks/use-rw-transaction';
-import { TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { TodoStoreActions, TodoStoreContext } from 'contexts/todo-store-context';
 import { TodoForm } from 'components/todo-form';
 import { TodoList } from 'components/todo-list';
 import { RemoveButton } from 'components/remove-button';

@@ -1,4 +1,4 @@
-import { Filters, TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { Filters, TodoStoreActions, TodoStoreContext } from 'contexts/todo-store-context';
 import { memo, useCallback, useContext } from 'react';
 
 export type RadioProps = {

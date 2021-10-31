@@ -123,5 +123,5 @@ export const TodoStoreContextProvider = memo(function TodoStoreContextProvider({
     },
   );
 
-  return <TodoStoreContext.Provider value={{ state, dispatch }}> {children} </TodoStoreContext.Provider>;
+  return <TodoStoreContext.Provider value={{ state, dispatch }}>{children}</TodoStoreContext.Provider>;
 });

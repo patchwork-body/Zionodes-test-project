@@ -2,7 +2,7 @@ import { memo, useContext, useEffect } from 'react';
 import type { Todo } from 'helpers/create-todo';
 import { TodoItem } from 'components/todo-item';
 import { useROTransaction } from 'hooks/use-ro-transaction';
-import { Filters, TodoStoreActions, TodoStoreContext } from 'components/store-context';
+import { Filters, TodoStoreActions, TodoStoreContext } from 'contexts/todo-store-context';
 
 export type TodoListProps = {
   parent: string;
