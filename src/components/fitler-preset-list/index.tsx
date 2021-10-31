@@ -13,7 +13,7 @@ export const FilterPresetList = memo(function FilterPresetList() {
         setPresets(presets);
       })
       .catch(console.error);
-  });
+  }, [getAll]);
 
   return (
     <ul className="grid grid-flow-row gap-y-2">

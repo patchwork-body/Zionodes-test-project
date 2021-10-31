@@ -19,7 +19,7 @@ export const Search = memo(function Search() {
   );
 
   useEffect(() => {
-    dispatch({ type: TodoStoreActions.SET_SEARCH_QUERY, payload: sessionStorage.getItem(SESSION_STORAGE_KEY) });
+    dispatch({ type: TodoStoreActions.SET_SEARCH_QUERY, payload: sessionStorage.getItem(SESSION_STORAGE_KEY) ?? '' });
   }, [dispatch]);
 
   return (
