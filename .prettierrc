@@ -11,6 +11,5 @@
   "quoteProps": "as-needed",
   "semi": true,
   "proseWrap": "preserve",
-  "jsxBracketSameLine": false,
   "jsxSingleQuote": false
 }
