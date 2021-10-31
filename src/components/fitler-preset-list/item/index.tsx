@@ -1,5 +1,4 @@
 import { memo, useCallback, useContext, useMemo } from 'react';
-import Image from 'next/image';
 import { TodoStoreActions, TodoStoreContext, Filters } from 'components/store-context';
 import { FilterWithId } from 'helpers/create-filter';
 import classNames from 'classnames';
