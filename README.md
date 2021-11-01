@@ -48,6 +48,15 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 https://user-images.githubusercontent.com/4983418/139652873-83fb856b-4824-4835-8d70-f7c64193edf9.mov
 
 
+- basic todo operations
+
+https://user-images.githubusercontent.com/4983418/139653320-99e6f280-382d-44cc-a2fb-233f9f51aa9a.mov
+
+- filter/search
+
+https://user-images.githubusercontent.com/4983418/139653609-a9aca087-7847-4ab2-bf54-4412c2bcdf51.mov
+
+
 
 
 
