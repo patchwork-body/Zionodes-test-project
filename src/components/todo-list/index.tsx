@@ -41,7 +41,9 @@ export const TodoList = memo(function TodoList({ parent }: TodoListProps) {
           }
         })
         .map(todo => (
-          <TodoItem key={todo.id} todo={todo} />
+          <li key={todo.id}>
+            <TodoItem todo={todo} />
+          </li>
         ))}
     </ul>
   );

@@ -1,6 +1,9 @@
 import { createContext, memo, ReactNode, useCallback, useEffect, useState } from 'react';
 import { openIndexedDB, OpenIndexedDBParams } from 'indexed-db';
+import getConfig from 'next/config';
 import { nanoid } from 'nanoid';
+
+const { publicRuntimeConfig } = getConfig();
 const DB_NAME_SESSION_STORAGE_KEY = 'databaseName';
 
 export type IndexedDBContextValue = {
@@ -26,7 +29,7 @@ export const IndexedDBContextProvider = memo(function IndexedDBContextProvider({
   const initStore = useCallback(
     async (databaseName: string) => {
       try {
-        setStore(await openIndexedDB({ name: databaseName, version: 1, init }));
+        setStore(await openIndexedDB({ name: databaseName, version: publicRuntimeConfig.DB_VERSION, init }));
       } catch (error) {
         if (error instanceof DOMException) {
           setError(error);
