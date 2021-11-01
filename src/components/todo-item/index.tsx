@@ -73,23 +73,23 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
     dispatch({ type: TodoStoreActions.SET_DRAGGABLE_TODO, payload: null });
   }, [dispatch]);
 
-  const dragEnter = useCallback((event: DragEvent<HTMLDivElement>) => {
+  const dragEnter = useCallback((event: DragEvent<HTMLLIElement>) => {
     event.preventDefault();
   }, []);
 
-  const dragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
+  const dragOver = useCallback((event: DragEvent<HTMLLIElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
     setIsDraggedOver(true);
   }, []);
 
-  const dragLeave = useCallback((event: DragEvent<HTMLDivElement>) => {
+  const dragLeave = useCallback((event: DragEvent<HTMLLIElement>) => {
     event.preventDefault();
     setIsDraggedOver(false);
   }, []);
 
   const drop = useCallback(
-    async (event: DragEvent<HTMLDivElement>) => {
+    async (event: DragEvent<HTMLLIElement>) => {
       event.preventDefault();
 
       if (draggableTodo && todo.order !== draggableTodo.order && todo.parent === draggableTodo.parent) {
@@ -112,7 +112,7 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
   }, []);
 
   return (
-    <div
+    <li
       className={classNames('grid grid-flow-row items-center gap-y-3 bg-gray-100 rounded-md p-2 border border-dashed', {
         'border-transparent': !isDraggedOver,
         'border-gray-700': isDraggedOver,
@@ -199,6 +199,6 @@ export const TodoItem = memo(function Todo({ todo }: TodoItemProps) {
           <TodoList parent={todo.id} />
         </div>
       )}
-    </div>
+    </li>
   );
 });

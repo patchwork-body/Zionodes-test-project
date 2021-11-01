@@ -6,8 +6,4 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: true,
   },
-
-  publicRuntimeConfig: {
-    DB_VERSION: process.env.DB_VERSION ?? 1,
-  },
 };
